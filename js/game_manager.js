@@ -20,7 +20,7 @@ GameManager.prototype.startTimer = function() {
   this.timerStatus = 1;
   this.startTime = new Date()
   this.timerID = setInterval( this.updateTimer, 10, this.startTime);
-
+  
 };
 
 GameManager.prototype.endTime = function() {
@@ -34,6 +34,7 @@ GameManager.prototype.endTime = function() {
 GameManager.prototype.updateTimer = function(startTime) {
   var curTime = new Date();
   var time = curTime.getTime() - startTime.getTime();
+  this.time = time;
   document.getElementById("timer").innerHTML = pretty(time);
 };
 
@@ -42,6 +43,18 @@ GameManager.prototype.restart = function () {
   this.storageManager.clearGameState();
   this.actuator.continueGame(); // Clear the game won/lost message
   this.setup();
+  document.getElementById("timer16").innerHTML = "";
+  document.getElementById("timer32").innerHTML = "";
+  document.getElementById("timer64").innerHTML = "";
+  document.getElementById("timer128").innerHTML = "";
+  document.getElementById("timer256").innerHTML = "";
+  document.getElementById("timer512").innerHTML = "";
+  document.getElementById("timer1024").innerHTML = "";
+  document.getElementById("timer2048").innerHTML = "";
+  document.getElementById("timer4096").innerHTML = "";
+  document.getElementById("timer8192").innerHTML = "";
+  document.getElementById("timer12384").innerHTML = "";
+
 };
 
 // Keep playing after winning (allows going over 2048)
@@ -61,17 +74,11 @@ GameManager.prototype.isGameTerminated = function () {
 
 // Set up the game
 GameManager.prototype.setup = function () {
+  document.getElementById("timer").innerHTML = pretty(0);
   var previousState = this.storageManager.getGameState();
 
   // Reload the game from a previous game if present
-  if (previousState) {
-    this.grid        = new Grid(previousState.grid.size,
-                                previousState.grid.cells); // Reload grid
-    this.score       = previousState.score;
-    this.over        = previousState.over;
-    this.won         = previousState.won;
-    this.keepPlaying = previousState.keepPlaying;
-  } else {
+  
     this.grid        = new Grid(this.size);
     this.score       = 0;
     this.over        = false;
@@ -82,7 +89,6 @@ GameManager.prototype.setup = function () {
 
     // Add the initial tiles
     this.addStartTiles();
-  }
 
   // Update the actuator
   this.actuate();
@@ -123,7 +129,8 @@ GameManager.prototype.actuate = function () {
     over:       this.over,
     won:        this.won,
     bestScore:  this.storageManager.getBestScore(),
-    terminated: this.isGameTerminated()
+    terminated: this.isGameTerminated(),
+    time:       this.time
   });
 
 };
@@ -135,7 +142,8 @@ GameManager.prototype.serialize = function () {
     score:       this.score,
     over:        this.over,
     won:         this.won,
-    keepPlaying: this.keepPlaying
+    keepPlaying: this.keepPlaying,
+    time:        this.time
   };
 };
 
@@ -200,11 +208,42 @@ GameManager.prototype.move = function (direction) {
           // Update the score
           self.score += merged.value;
 
-          // The mighty 2048 tile
-          if (merged.value === 2048){
-            self.won = true;
-            self.endTime();
+          //Tile is made
+          if (merged.value === 16  &&  document.getElementById("timer16").innerHTML === ""){
+            document.getElementById("timer16").innerHTML = pretty(time);
           }
+          if (merged.value === 32  &&  document.getElementById("timer32").innerHTML === ""){
+            document.getElementById("timer32").innerHTML = pretty(time);
+          }
+          if (merged.value === 64  &&  document.getElementById("timer64").innerHTML === ""){
+            document.getElementById("timer64").innerHTML = pretty(time);
+          }
+          if (merged.value === 128  &&  document.getElementById("timer128").innerHTML === ""){
+            document.getElementById("timer128").innerHTML = pretty(time);
+          }
+          if (merged.value === 256  &&  document.getElementById("timer256").innerHTML === ""){
+            document.getElementById("timer256").innerHTML = pretty(time);
+          }
+          if (merged.value === 512  &&  document.getElementById("timer512").innerHTML === ""){
+            document.getElementById("timer512").innerHTML = pretty(time);
+          }
+          if (merged.value === 1024  &&  document.getElementById("timer1024").innerHTML === ""){
+            document.getElementById("timer1024").innerHTML = pretty(time);
+          }
+          if (merged.value === 2048  &&  document.getElementById("timer2048").innerHTML === ""){
+            self.won = true;
+            document.getElementById("timer2048").innerHTML = pretty(time);
+          }
+          if (merged.value === 4096  &&  document.getElementById("timer4096").innerHTML === ""){
+            document.getElementById("timer4096").innerHTML = pretty(time);
+          }
+          if (merged.value === 8192  &&  document.getElementById("timer8192").innerHTML === ""){
+            document.getElementById("timer8192").innerHTML = pretty(time);
+          }
+          if (merged.value === 16384  &&  document.getElementById("timer16384").innerHTML === ""){
+            document.getElementById("timer16384").innerHTML = pretty(time);
+          }
+
         } else {
           self.moveTile(tile, positions.farthest);
         }
