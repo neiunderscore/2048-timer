@@ -243,6 +243,9 @@ GameManager.prototype.move = function (direction) {
           if (merged.value === 16384  &&  document.getElementById("timer16384").innerHTML === ""){
             document.getElementById("timer16384").innerHTML = pretty(time);
           }
+          if (merged.value === 32768  &&  document.getElementById("timer32768").innerHTML === ""){
+            document.getElementById("timer32768").innerHTML = pretty(time);
+          }
 
         } else {
           self.moveTile(tile, positions.farthest);
